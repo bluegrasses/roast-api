@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('gedecode',function (){
+    return \App\utils\GaodeMaps::geocodeAddress('天城路1号', '杭州', '浙江');
+});
