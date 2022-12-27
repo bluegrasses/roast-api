@@ -33,6 +33,8 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::get('cafes/{id}',[CafesController::class,'getCafe']);
 //brew methods
     Route::get('brew-methods',[BrewMethodsController::class,'getBrewMethods']);
-
+//cafe
+    Route::post('/cafes/{id}/like',[CafesController::class,'postLikeCafe']);
+    Route::delete('/cafes/{id}/like',[CafesController::class,'deleteLikeCafe']);
 //   Route::get('products',[ProductsController::class,'index']);
 });

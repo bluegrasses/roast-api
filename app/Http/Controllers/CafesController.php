@@ -7,6 +7,8 @@ use App\Http\Resources\CafesResource;
 use App\Models\Cafe;
 use App\Traits\ApiResponse;
 use App\utils\GaodeMaps;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class CafesController extends Controller
 {
@@ -21,7 +23,7 @@ class CafesController extends Controller
 
     public function getCafe($id)
     {
-        $cafe =  Cafe::where('id', '=', $id)->with('brewMethods')->first();
+        $cafe =  Cafe::where('id', '=', $id)->with('brewMethods')->with('userLike')->first();
         if (is_null($cafe)){
             return $this->sendError('cafe not found');
         }
@@ -105,4 +107,19 @@ class CafesController extends Controller
 
         return $this->sendSuccess($addedCafes,'cafe create success');
     }
+
+//    实现喜欢
+    public function postLikeCafe($cafeID){
+        $cafe=Cafe::where('id','=',$cafeID)->first();
+        $cafe->likes()->attach(Auth::user()->id,['created_at'=>Carbon::now(),'updated_at'=>Carbon::now()]);
+        return response()->json(['cafe_liked'=>true],201);
+    }
+
+//    实现取消喜欢
+    public function deleteLikeCafe($cafeID){
+        $cafe=Cafe::where('id','=',$cafeID)->first();
+        $cafe->likes()->detach(Auth::user()->id);
+        return response()->json(null,204);
+    }
+
 }

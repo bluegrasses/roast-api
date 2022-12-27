@@ -38,22 +38,35 @@ use Illuminate\Database\Eloquent\Model;
 class Cafe extends Model
 {
     use HasFactory;
-    protected $guarded= ["id"];
+
+    protected $guarded = ["id"];
 
     public function brewMethods()
     {
-        return $this->belongsToMany(BrewMethod::class,'cafes_brew_methods','cafe_id','brew_method_id');
+        return $this->belongsToMany(BrewMethod::class, 'cafes_brew_methods', 'cafe_id', 'brew_method_id');
     }
 
 //    定义父子关系
     //查询所有子分店
     public function children()
     {
-        return $this->hasMany(Cafe::class,'parent', include "id");
+        return $this->hasMany(Cafe::class, 'parent', include "id");
     }
+
     //查询属于哪一个父分店
     public function parent()
     {
-        return $this->hasOne(Cafe::class,'id', include "parent");
+        return $this->hasOne(Cafe::class, 'id', include "parent");
     }
+//    创建和user的关联关系
+    public function likes()
+    {
+        return $this->belongsToMany(User::class,'users_cafes_likes','cafe_id','user_id');
+    }
+
+    public function userLike()
+    {
+        return $this->belongsToMany(User::class,'users_cafes_likes','cafe_id','user_id')->where('user_id',auth()->id());
+    }
+
 }
