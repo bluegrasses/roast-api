@@ -41,6 +41,10 @@ class Cafe extends Model
 
     protected $guarded = ["id"];
 
+    /**
+     * 定义relation
+     */
+
     public function brewMethods()
     {
         return $this->belongsToMany(BrewMethod::class, 'cafes_brew_methods', 'cafe_id', 'brew_method_id');
@@ -67,6 +71,11 @@ class Cafe extends Model
     public function userLike()
     {
         return $this->belongsToMany(User::class,'users_cafes_likes','cafe_id','user_id')->where('user_id',auth()->id());
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class,'cafes_users_tags','cafe_id','tag_id');
     }
 
 }
